@@ -4,7 +4,7 @@ This project demonstrates how to extract, process, and store data from the **Ric
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
 The notebook fetches data from multiple endpoints of the Rick and Morty API:
 
@@ -22,7 +22,7 @@ This project is suitable for:
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - Python 3  
 - Requests – for API calls  
@@ -33,7 +33,7 @@ This project is suitable for:
 
 ---
 
-## 🔗 Data Source
+## Data Source
 
 **Rick and Morty API**  
 https://rickandmortyapi.com/
@@ -45,7 +45,7 @@ Endpoints used:
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 1. The notebook sends requests to the API endpoints.
 2. Pagination is handled by looping through all available pages.
@@ -55,7 +55,7 @@ Endpoints used:
 
 ---
 
-## ▶️ How to Run the Project
+## How to Run the Project
 
 1. Clone the repository:
    ```bash
