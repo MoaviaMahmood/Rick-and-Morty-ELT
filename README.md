@@ -1,4 +1,4 @@
-# Rick and Morty API Data Extraction
+# API Data ETL
 
 This project demonstrates how to extract, process, and store data from the **Rick and Morty public API** using Python. It is designed as a beginner-friendly data engineering / data analysis project, showcasing API pagination handling, JSON processing, and basic data transformation with Pandas.
 
