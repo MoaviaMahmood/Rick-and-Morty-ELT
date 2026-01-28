@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: rm_user
+      POSTGRES_PASSWORD: rm_pass
+      POSTGRES_DB: rick_morty
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  etl:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_USER: rm_user
+      POSTGRES_PASSWORD: rm_pass
+      POSTGRES_DB: rick_morty
+      POSTGRES_HOST: postgres
+
+volumes:
+  pgdata:

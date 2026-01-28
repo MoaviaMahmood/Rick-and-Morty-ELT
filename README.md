@@ -1,96 +1,183 @@
-# API Data ETL
+# ETL Pipeline (Docker + Python + PostgreSQL)
 
-This project demonstrates how to extract, process, and store data from the **Rick and Morty public API** using Python. It is designed as a beginner-friendly data engineering / data analysis project, showcasing API pagination handling, JSON processing, and basic data transformation with Pandas.
+An end-to-end **containerized ETL (Extract, Transform, Load) pipeline** that ingests data from the **public API**, processes it using **Python & Pandas**, and loads it into a **PostgreSQL** database using **Docker Compose**.
 
----
-
-## Project Overview
-
-<img width="1107" height="865" alt="Image" src="https://github.com/user-attachments/assets/dc630008-5aba-4113-b9ed-755097327f04" />
-
-The notebook fetches data from multiple endpoints of the Rick and Morty API:
-
-- **Characters**
-- **Locations**
-- **Episodes**
-
-The extracted data is paginated, combined into a single dataset per endpoint, and saved locally in **JSON format** for further analysis or database loading.
-
-This project is suitable for:
-- Practicing API data extraction
-- Understanding paginated REST APIs
-- Building a simple data ingestion pipeline
-- Portfolio demonstration for data engineering or analytics roles
+This project demonstrates **real-world data engineering practices** including API ingestion, data cleaning, container orchestration, and relational data storage.
 
 ---
 
-## Charts & Visualizations
+## 🚀 Project Overview
 
-The project includes basic data visualizations to better understand the extracted data.
+The pipeline performs the following steps:
 
-### Character Status Distribution
-A bar chart showing the number of characters by status (Alive, Dead, Unknown).
-<img width="571" height="504" alt="Image" src="https://github.com/user-attachments/assets/4eac092d-2b1e-4011-b769-a6ca4210186b" />
+1. **Extract** data from the API (paginated JSON responses)
+2. **Transform** raw data into structured, cleaned Pandas DataFrames
+3. **Load** processed data into PostgreSQL tables
+4. Persist cleaned datasets as CSV files for downstream use
 
-### Gender Distribution
-A bar chart representing the gender distribution of characters.
-<img width="571" height="517" alt="Image" src="https://github.com/user-attachments/assets/250c7ee9-b313-4efc-812e-539bb6bc53a8" />
-
-### Character Species Distribution
-A bar chart representing the species distribution of characters.
-<img width="571" height="593" alt="Image" src="https://github.com/user-attachments/assets/48ac269b-c6fc-4bd6-ad46-10b0241ebdc9" />
-
-### Gender by Species
-A bar chart showing what genders a specie have.
-<img width="850" height="763" alt="Image" src="https://github.com/user-attachments/assets/79913732-64a5-4081-ab4a-92a304cd3e0b" />
-
-### Status by Species
-A bar chart showing the number of species by status (Alive, Dead, Unknown).
-<img width="850" height="686" alt="Image" src="https://github.com/user-attachments/assets/0d35a180-41f9-4f70-944b-4341c97049dd" />
-
-These visualizations help in:
-- Understanding data distribution
-- Identifying patterns in the dataset
-- Improving data storytelling for analysis and reporting
+The entire workflow runs inside Docker containers, ensuring **reproducibility** and **environment consistency**.
 
 ---
 
-## Technologies Used
+## 🧱 Architecture Overview
 
-- Python 3  
-- Requests – for API calls  
-- Pandas – for data handling and transformation  
-- JSON – for data storage  
-- SQLAlchemy – for database integration  
-- Jupyter Notebook  
+### Data Flow
+
+```
+API
+        │
+        ▼
+ETL Container (Python)
+  - Extract (requests)
+  - Transform (pandas)
+  - Load (SQLAlchemy)
+        │
+        ▼
+PostgreSQL Container
+```
+
+### Architecture Description
+
+* **API** acts as the external data source
+* **ETL container** runs a Python application that:
+
+  * Fetches paginated API data
+  * Cleans and normalizes fields
+  * Writes results to PostgreSQL
+* **PostgreSQL container** stores transformed data in relational tables
+* **Docker Compose** orchestrates service startup and networking
+
+The ETL container runs as a **batch job** and exits after successful execution, while PostgreSQL remains available for querying.
 
 ---
 
-## Data Source
+## 🐳 Tech Stack
 
-**Rick and Morty API**  
-https://rickandmortyapi.com/
-
-Endpoints used:
-- `/character`
-- `/location`
-- `/episode`
-
----
-
-## How It Works
-
-1. The notebook sends requests to the API endpoints.
-2. Pagination is handled by looping through all available pages.
-3. Data from each page is appended into a single list.
-4. The final dataset is converted into a Pandas DataFrame.
-5. Extracted data is saved as `.json` files locally.
+* **Python 3.11**
+* **Pandas** – data transformation
+* **Requests** – API ingestion
+* **SQLAlchemy + psycopg2** – database connectivity
+* **PostgreSQL 15** – relational storage
+* **Docker & Docker Compose** – container orchestration
 
 ---
 
-## How to Run the Project
+## 📂 Project Structure
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/rick-and-morty-api-extraction.git
-   
+```md
+API_data_pipeline/
+├── etl/
+│   ├── extract.py
+│   ├── transform.py
+│   └── load.py
+├── raw_data/
+├── useful_data/
+├── docker-compose.yml
+├── Dockerfile
+├── main.py
+├── requirements.txt
+├── .env
+├── .gitignore
+└── README.md
+```
+
+---
+
+## ⚙️ Environment Variables
+
+The project uses environment variables for secure configuration:
+
+```env
+POSTGRES_USER=rm_user
+POSTGRES_PASSWORD=rm_password
+POSTGRES_DB=rick_morty
+POSTGRES_HOST=postgres
+```
+
+These are injected into the ETL container at runtime via Docker Compose.
+
+---
+
+## ▶️ How to Run the Project
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/your-username/rick-morty-etl.git
+cd rick-morty-etl
+```
+
+### 2️⃣ Start the Pipeline
+
+```bash
+docker-compose up --build
+```
+
+This will:
+
+* Start PostgreSQL
+* Run the ETL container
+* Load data into the database
+
+---
+
+## 🗄️ Database Verification
+
+Access PostgreSQL:
+
+```bash
+docker exec -it rick_morty-postgres-1 psql -U rm_user -d rick_morty
+```
+
+Check loaded tables:
+
+```sql
+\dt;
+SELECT COUNT(*) FROM characters;
+```
+
+---
+
+## 📊 Output
+
+* PostgreSQL tables:
+
+  * `characters`
+  * `episodes`
+* CSV files:
+
+  * `useful_data/characters.csv`
+  * `useful_data/episodes.csv`
+
+---
+
+## 🧠 Key Data Engineering Concepts Demonstrated
+
+* API-based data ingestion
+* Pagination handling
+* Data cleaning & normalization
+* Batch ETL processing
+* Dockerized data pipelines
+* Service orchestration with Docker Compose
+* Relational data modeling
+
+---
+
+## 🔮 Future Improvements
+
+* Add **Airflow** for orchestration
+* Add **logging & retries** for failed API pages
+* Incremental loads instead of full refresh
+* Push raw data to **S3 / GCS**
+* Add data quality checks
+
+---
+
+## 👤 Author
+
+**Moavia Mahmood**
+Data Engineer
+
+---
+
+⭐ If you found this project useful, feel free to star the repository!
