@@ -21,7 +21,8 @@ The entire workflow runs inside Docker containers, ensuring **reproducibility** 
 
 ## Architecture Overview
 
-<img width="632" height="845" alt="Screenshot 2026-01-28 174227" src="https://github.com/user-attachments/assets/dee90077-708a-43ab-b547-c947608893ff" />
+
+<img width="2201" height="3238" alt="rick_morty (1) drawio" src="https://github.com/user-attachments/assets/ac2cb3b9-d2ad-4673-9a4d-0e6c4a20e636" />
 
 
 ### Data Flow
